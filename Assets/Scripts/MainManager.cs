@@ -12,6 +12,7 @@ public class MainManager : MonoBehaviour
 
     public Text ScoreText;
     public GameObject GameOverText;
+    public DataManager dataManager;
     
     private bool m_Started = false;
     private int m_Points;
@@ -72,6 +73,9 @@ public class MainManager : MonoBehaviour
     {
         m_GameOver = true;
         GameOverText.SetActive(true);
+
+        //Call AddHighScore() method from DataManager script when Game over occurs
+        dataManager.AddHighScore(dataManager.playerName, m_Points);
     }
 
     public void ReturnToMenu()
