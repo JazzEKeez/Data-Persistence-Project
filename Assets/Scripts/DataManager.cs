@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using TMPro;
 
@@ -21,26 +22,53 @@ public class DataManager : MonoBehaviour
         }
 
         instance = this;
-        DontDestroyOnLoad(gameObject); 
+        DontDestroyOnLoad(gameObject);
+
+        LoadHighScores();
     }
 
     public void SaveHighScores()
     {
         string json = JsonUtility.ToJson(highScores);
-        PlayerPrefs.SetString("HighScores", json);
-        PlayerPrefs.Save();
+
+        Debug.Log("JSON Data to be Saved: " + json);
+
+        File.WriteAllText(Application.persistentDataPath + "/savefile.json", json);
+
+        Debug.Log("Saved High Scores: ");
+        foreach (var score in highScores)
+        {
+            Debug.Log($"{score.playerName}: {score.highScore}");
+        }
     }
 
     public void LoadHighScores()
     {
-        if (PlayerPrefs.HasKey("HighScores"))
+        string path = Application.persistentDataPath + "/savefile.json";
+        if (File.Exists(path))
         {
-            string json = PlayerPrefs.GetString("HighScores");
+            string json = File.ReadAllText(path);
+            
+            // Debug log the JSON data retrieved from persistentDataPath
+            Debug.Log("Json Data:" + json);
+
             highScores = JsonUtility.FromJson<List<HighScore>>(json);
+            
+            //Check whether there are high score entries in the Json file
+            if (highScores == null || highScores.Count == 0)
+            {
+                Debug.Log("No high scores found or JSON deserialization issue!");
+            }
         }
         else
         {
             highScores = new List<HighScore>();
+        }
+
+        Debug.Log("High Scores Loaded: ");
+        foreach (var score in highScores)
+        {
+            Debug.Log($"{score.playerName}: {score.highScore}");
         }
     }
 
@@ -57,26 +85,9 @@ public class DataManager : MonoBehaviour
             highScore = score
         };
 
-        //Check if highScores list is empty or score is higher than lowest score on highScores list
-        if(highScores.Count == 0 || score > highScores[highScores.Count - 1].highScore)
-        {
-            // Add new entry to the end of the list
-            highScores.Add(newEntry);
-        }
-        else
-        {
-            // Find the appropriate index for new entry
-            for(int i = 0; i < highScores.Count; i++)
-            {
-                if (score > highScores[i].highScore)
-                {
-                    // insert new score to list above lower scores
-                    highScores.Insert(i, newEntry);
-                    break;
-                }
+        highScores.Add(newEntry);
 
-            }
-        }
+        SortHighScores();
         
         // when highScores cout exceeds 5 entries
         while (highScores.Count > 5)
@@ -84,6 +95,9 @@ public class DataManager : MonoBehaviour
             // Remove the lowest entry from the list
             highScores.RemoveAt(highScores.Count - 1);
         }
+
+        //Save list of high scores
+        SaveHighScores();
     }
 }
 [System.Serializable]
@@ -91,4 +105,9 @@ public class HighScore
 {
     public string playerName;
     public int highScore;
+
+    // Parameterless constructor for deserialization
+    public HighScore()
+    {
+    }
 }

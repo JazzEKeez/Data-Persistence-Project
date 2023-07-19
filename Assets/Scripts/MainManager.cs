@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using TMPro;
 
 public class MainManager : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class MainManager : MonoBehaviour
     public Rigidbody Ball;
 
     public Text ScoreText;
+    public TextMeshProUGUI highScoreListText;
     public GameObject GameOverText;
     public DataManager dataManager;
     
@@ -37,6 +39,13 @@ public class MainManager : MonoBehaviour
                 brick.onDestroyed.AddListener(AddPoint);
             }
         }
+
+        UpdateHighScoreListText();
+    }
+
+    public void Awake()
+    {
+        dataManager = GameObject.Find("Data Manager").GetComponent<DataManager>();
     }
 
     private void Update()
@@ -76,6 +85,20 @@ public class MainManager : MonoBehaviour
 
         //Call AddHighScore() method from DataManager script when Game over occurs
         dataManager.AddHighScore(dataManager.playerName, m_Points);
+        UpdateHighScoreListText();
+    }
+
+    public void UpdateHighScoreListText()
+    {
+
+        string formattedText = "Top 5 Scores: \n";
+
+        for (int i = 0; i < dataManager.highScores.Count; i++)
+        {
+            formattedText += $"{i + 1}. {dataManager.highScores[i].playerName}: {dataManager.highScores[i].highScore}\n";
+        }
+
+        highScoreListText.text = formattedText;
     }
 
     public void ReturnToMenu()
