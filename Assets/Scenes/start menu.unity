@@ -154,6 +154,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dataManager: {fileID: 0}
   nameInput: {fileID: 471882983}
+  highScoreListText: {fileID: 0}
   playerName: 
 --- !u!4 &175657903
 Transform:
@@ -980,6 +981,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerName: 
   highScore: 0
+  highScores: []
 --- !u!4 &1141723668
 Transform:
   m_ObjectHideFlags: 0
@@ -1214,7 +1216,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1184831924}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 175657902}
+        m_TargetAssemblyTypeName: MenuUIHandler, Assembly-CSharp
+        m_MethodName: ExitApplication
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1184831924
 MonoBehaviour:
   m_ObjectHideFlags: 0

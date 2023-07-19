@@ -29,7 +29,8 @@ public class DataManager : MonoBehaviour
 
     public void SaveHighScores()
     {
-        string json = JsonUtility.ToJson(highScores);
+        SaveData<HighScore> saveData = new SaveData<HighScore>(highScores);
+        string json = JsonUtility.ToJson(saveData);
 
         Debug.Log("JSON Data to be Saved: " + json);
 
@@ -48,11 +49,10 @@ public class DataManager : MonoBehaviour
         if (File.Exists(path))
         {
             string json = File.ReadAllText(path);
-            
+            SaveData<HighScore> saveData = JsonUtility.FromJson<SaveData<HighScore>>(json);
             // Debug log the JSON data retrieved from persistentDataPath
             Debug.Log("Json Data:" + json);
-
-            highScores = JsonUtility.FromJson<List<HighScore>>(json);
+            highScores = saveData.list;
             
             //Check whether there are high score entries in the Json file
             if (highScores == null || highScores.Count == 0)
@@ -98,6 +98,16 @@ public class DataManager : MonoBehaviour
 
         //Save list of high scores
         SaveHighScores();
+    }
+}
+[System.Serializable]
+public class SaveData<T>
+{
+    public List<T> list;
+
+    public SaveData(List<T> data)
+    {
+        this.list = data;
     }
 }
 [System.Serializable]
