@@ -11,8 +11,6 @@ public class MenuUIHandler : MonoBehaviour
 {
     public DataManager dataManager;
     public TMP_InputField nameInput;
-    public TextMeshProUGUI highScoreListText;
-    public string playerName;
 
     public void Awake()
     {
@@ -27,17 +25,6 @@ public class MenuUIHandler : MonoBehaviour
         SceneManager.LoadScene(1);
     }
 
-    public void UpdateHighScoreListText()
-    {
-        string formattedText = "High Scores: \n";
-
-        for(int i = 0; i < dataManager.highScores.Count; i++)
-        {
-            formattedText += $"{i + 1}. {dataManager.highScores[i].playerName}: {dataManager.highScores[i].highScore}\n";
-        }
-
-        highScoreListText.text = formattedText;
-    }
     public void ExitApplication()
     {
 #if UNITY_EDITOR
